@@ -39,9 +39,10 @@ print('client_secret: {}'.format(client_secret))
 credentials = client.authorize(pin, 'pin')
 client.set_user_auth(credentials['access_token'], credentials['refresh_token'])
 
-# Read Exif
+# Read Exif and Upload file
 import PIL.Image
 import PIL.ExifTags
+from imgurpython.helpers.error import ImgurClientError
 print('files:')
 for f in files:
     print('\t{}'.format(f))
@@ -62,4 +63,18 @@ for f in files:
               'ExifImageHeight']:
         print('\t\t{}: {}'.format(k, exif[k]))
         config['description'] += '{} : {}\n'.format(k, exif[k])
-    image = client.upload_from_path(f, config=config, anon=False)
+    done=False
+    print('Uploading', end='', flush=True)
+    while not done:
+        try:
+            print('.', end='', flush=True)
+            image = client.upload_from_path(f, config=config, anon=False)
+            done=True
+            print('success!')
+        except ImgurClientError as e:
+            print('i', end='', flush=True)
+        except KeyboardInterrupt:
+            import sys
+            sys.exit(-1)
+        except:
+            print('e', end='', flush=True)
