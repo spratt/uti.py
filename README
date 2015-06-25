@@ -1,0 +1,17 @@
+uti.py
+======
+
+Upload To Imgur in Python, a command-line utility which uploads files
+to imgur.
+
+INSTALL
+-------
+
+virtualenv .
+source bin/activate
+pip install imgurpython
+
+RUN
+---
+
+python uti.py DSC_0001.JPG
