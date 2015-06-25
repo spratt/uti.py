@@ -23,9 +23,9 @@ album = args.album
 
 ######################################################################
 # Do the auth
-from imgurpython import ImgurClient
+import imgurpython
 
-client = ImgurClient(client_id, client_secret)
+client = imgurpython.ImgurClient(client_id, client_secret)
 authorization_url = client.get_auth_url('pin')
 
 print('Go to the following URL:')
@@ -64,17 +64,25 @@ for f in files:
         print('\t\t{}: {}'.format(k, exif[k]))
         config['description'] += '{} : {}\n'.format(k, exif[k])
     done=False
+    err=None
     print('Uploading', end='', flush=True)
     while not done:
+        import sys
         try:
             print('.', end='', flush=True)
             image = client.upload_from_path(f, config=config, anon=False)
             done=True
             print('success!')
+        except imgurpython.helpers.error.ImgurClientRateLimitError:
+            print('Rate limit exceeded, try again tomorrow.')
+            sys.exit(-2)
         except ImgurClientError as e:
             print('i', end='', flush=True)
+            err=e
         except KeyboardInterrupt:
-            import sys
+            if err != None:
+                print('The last error was: {}'.format(e))
             sys.exit(-1)
         except:
+            err = sys.exc_info()[0]
             print('e', end='', flush=True)
