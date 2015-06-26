@@ -51,7 +51,7 @@ except:
     print('Authentication error.')
     sys.exit(-1)
 
-creds=client.get_credits()
+creds=client.make_request('GET', 'credits')
     
 ######################################################################
 # Read Exif and Upload file
