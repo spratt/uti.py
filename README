@@ -10,8 +10,9 @@ INSTALL
 virtualenv .
 source bin/activate
 pip install imgurpython
+pip install pillow
 
 RUN
 ---
 
-python uti.py DSC_0001.JPG
+python uti.py -a 1274a DSC_0001.JPG
